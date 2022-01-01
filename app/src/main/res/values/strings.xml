@@ -1,0 +1,7 @@
+<resources>
+  <string name="app_name">RecyclerViewApp</string>
+  <string name="contents">コンテンツ</string>
+  <string name="reg">登録</string>
+  <string name="del">削除</string>
+  <string name="move">移動</string>
+</resources>
