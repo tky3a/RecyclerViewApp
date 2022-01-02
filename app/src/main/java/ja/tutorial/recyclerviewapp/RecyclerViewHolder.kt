@@ -15,6 +15,7 @@ class RecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     // 変数の値がAdopterで参照する名前になる
     val tvName: TextView = view.findViewById(R.id.tvName)
     val btnDel: ImageButton = view.findViewById(R.id.btnDel)
+    val btnMoved: ImageButton = view.findViewById(R.id.btnMove)
     // ーーーーーーーー　Adopterで参照する値を生成する　endーーーーーーーーーー
 
     init {

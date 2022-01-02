@@ -3,6 +3,8 @@ package ja.tutorial.recyclerviewapp
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,7 @@ class MyAdapter(
     private val itemList: MutableList<MyData>
 ) : RecyclerView.Adapter<RecyclerViewHolder>() {
     private var mRecyclerView: RecyclerView? = null
+    private var activity: MainActivity? = null
 
     // Adapterがアタッチされた時に発火する関数　（コールバックメソッド）
     // AttachされたらrecyclerViewを代入
@@ -27,29 +30,6 @@ class MyAdapter(
         super.onDetachedFromRecyclerView(recyclerView)
         mRecyclerView = null
 
-    }
-
-
-    // 表示内容の設定
-    override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-        // holderからRecyclerViewHolderで設定した内容を参照できる（データ１行ずつの情報）
-        holder?.let {
-            it.tvName.text = itemList.get(index = position).name
-        }
-        // 削除ボタン押下
-        holder?.btnDel.setOnClickListener {
-            Toast.makeText(context, "削除します", Toast.LENGTH_LONG).show()
-            // 削除
-            itemList.remove(itemList[position])
-            // 削除した状態を表示するため、リスト全体を更新
-            this.notifyDataSetChanged()
-        }
-        Log.e("kakunin", "$holder")
-    }
-
-    // データのサイズを返してあげるだけ
-    override fun getItemCount(): Int {
-        return itemList.size
     }
 
     // ViewHolder オブジェクトを生成するための実装
@@ -68,7 +48,56 @@ class MyAdapter(
             }
         }
 
+        // MainActivityを取得
+        activity = parent.context as MainActivity?
+
         // レイアウトを返却
         return RecyclerViewHolder(mView)
     }
+
+
+    // 表示内容の設定
+    override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
+        // holderからRecyclerViewHolderで設定した内容を参照できる（データ１行ずつの情報）
+        holder?.let {
+            it.tvName.text = itemList.get(index = position).name
+        }
+        // 削除ボタン押下
+        holder?.btnDel.setOnClickListener {
+            Toast.makeText(context, "削除します", Toast.LENGTH_LONG).show()
+            // 削除
+            itemList.remove(itemList[position])
+            // 削除した状態を表示するため、リスト全体を更新
+            this.notifyDataSetChanged()
+        }
+        //
+//        holder?.btnMoved.setOnClickListener {
+//            fun onTouch(view: View, event: MotionEvent): Boolean {
+//                // イベントアクションが、ボタンのタップを感知したら発火
+//                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+//                    println("aiueo")
+//                }
+//                return view.onTouchEvent(event)
+//            }
+//        }
+
+        //  TODO:ドラッグ＆ドロップアイコンのタップイベント
+        // イベントの発火はできているけど、リストの移動ができていない
+        holder.btnMoved.setOnTouchListener { v, event ->
+            if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+                // 長押しではなく、タッチしてすぐにドラッグ状態にする
+                holder.itemView.startDragAndDrop(null, View.DragShadowBuilder(v), v, 0)
+                println("うごく？ $activity.con")
+            }
+            return@setOnTouchListener true
+        }
+        Log.e("kakunin", "$holder")
+    }
+
+    // データのサイズを返してあげるだけ
+    override fun getItemCount(): Int {
+        return itemList.size
+    }
+
+
 }
